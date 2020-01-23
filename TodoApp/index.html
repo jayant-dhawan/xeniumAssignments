@@ -12,20 +12,24 @@
 
 <body>
     <div id="Content" class="container-fluid row">
-        <div id="addTask" class="col s4">
-            <form>
+        <div id="addTask" class="col s12 m3 l3">
+            <form class="flow-text">
                 <label for="addItem"><h3>Add Task</h3></label>
-                <input type="text" placeholder="Add Task..." id="task" autocomplete="off">
-                <button onclick="addTask();">Add</button>
+                <input type="text" class="input-field" placeholder="Add Task..." id="task" autocomplete="off" row>
+                <button onclick="addTask();" class="btn waves-effect light-blue darken-3">Add</button>
             </form>
         </div>
-        <div id="taskList" class="col s8 center-align">
-            <ul id="showTask">
+        <div id="taskList" class="col s12 m9 l8 center-align">
+            <ul id="showTask" class="flow-text">
 
             </ul>
         </div>
     </div>
     <script src="todoApp.js"></script>
 </body>
-
+<style>
+    button{
+        float: right;
+    }
+</style>
 </html>
