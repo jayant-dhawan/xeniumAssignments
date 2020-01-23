@@ -2,7 +2,7 @@ var taskList = [];
 var show = document.getElementById("showTask");
 
 function addTask() {
-     var task = document.getElementById("task").value;
+    var task = document.getElementById("task").value;
     // var newDiv = document.createElement("div");
     // var newTask = document.createElement("li");
     // var buttonDone = document.createElement("buttonDone");
@@ -19,10 +19,10 @@ function addTask() {
     // newDiv.append(buttonDelete)
     // show.prepend(newDiv);
     // console.log(newTask);
-    if(window.localStorage.getItem('task'))
+    if (window.localStorage.getItem('task'))
         taskList = window.localStorage.getItem('task').split(',');
     taskList.unshift(task);
-    window.localStorage.setItem('task',taskList);
+    window.localStorage.setItem('task', taskList);
     reload();
 
 }
@@ -60,18 +60,17 @@ function addItem() {
         buttonDelete.setAttribute("onclick", "deleteTask(" + taskList.indexOf(d) + ");");
         buttonDelete.innerText = "Delete";
         newTask.innerHTML = d;
-        newTask.setAttribute("class","tab")
-        newTask.setAttribute("style","display:inline-block;float : center");
-        newDiv.setAttribute("class","tabs")
-        buttonDone.setAttribute("class","btn waves-effect green")
-        buttonDelete.setAttribute("class","btn waves-effect red darken-2")
+        newTask.setAttribute("class", "tab")
+        newTask.setAttribute("style", "display:inline-block;float : center");
+        newDiv.setAttribute("class", "tabs")
+        buttonDone.setAttribute("class", "btn waves-effect green")
+        buttonDelete.setAttribute("class", "btn waves-effect red darken-2")
         newDiv.append(newTask);
-        newDiv.append(buttonDone);
         newDiv.append(buttonDelete);
-
+        newDiv.append(buttonDone);
         show.append(newDiv);
     });
 }
-window.onload = function (){
+window.onload = function () {
     addItem();
 }
