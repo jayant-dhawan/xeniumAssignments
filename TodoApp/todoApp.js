@@ -72,6 +72,6 @@ function addItem() {
         show.append(newDiv);
     });
 }
-window.onload = function () {
+window.onload = function (){
     addItem();
 }
