@@ -60,9 +60,15 @@ function addItem() {
         buttonDelete.setAttribute("onclick", "deleteTask(" + taskList.indexOf(d) + ");");
         buttonDelete.innerText = "Delete";
         newTask.innerHTML = d;
+        newTask.setAttribute("class","tab")
+        newTask.setAttribute("style","display:inline-block;float : center");
+        newDiv.setAttribute("class","tabs")
+        buttonDone.setAttribute("class","btn waves-effect green")
+        buttonDelete.setAttribute("class","btn waves-effect red darken-2")
         newDiv.append(newTask);
         newDiv.append(buttonDone);
         newDiv.append(buttonDelete);
+
         show.append(newDiv);
     });
 }
