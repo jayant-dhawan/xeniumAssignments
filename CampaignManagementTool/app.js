@@ -16,6 +16,7 @@ var indexRouter = require('./routes/index');
 var dashboardRouter = require('./routes/dashboard');
 var advertiserRouter = require('./routes/advertiser');
 var addCampaignRouter = require('./routes/addCampaign');
+var campaignRouter = require('./routes/campaign');
 
 var app = express();
 mongoose.connect(dbConfig.url, {
@@ -54,6 +55,7 @@ app.use('/', indexRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/advertiser', advertiserRouter);
 app.use('/addCampaign', addCampaignRouter);
+app.use('/campaign', campaignRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

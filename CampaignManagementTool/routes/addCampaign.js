@@ -46,12 +46,11 @@ router.post('/:id', isAuthenticated, function (req, res) {
         res.redirect('/');
 });
 
-router.get('/:id', isAuthenticated, function(req, res){
-    if(req.isAuthenticated()){
-        res.redirect('/addCampaign/'+ req.params.id + '1');
-    }
-    else
-    res.redirect('/');
+router.get('/:id', isAuthenticated, function (req, res) {
+    if (req.isAuthenticated()) {
+        res.redirect('/addCampaign/' + req.params.id + '1');
+    } else
+        res.redirect('/');
 });
 
 router.get('/:id/:page', isAuthenticated, function (req, res) {
@@ -68,7 +67,9 @@ router.get('/:id/:page', isAuthenticated, function (req, res) {
             .skip((perPage * page) - perPage)
             .limit(perPage)
             .exec(function (err, camp) {
-                Campaigns.countDocuments().exec(function (err, count) {
+                Campaigns.countDocuments({
+                    advertiserId: id
+                }).exec(function (err, count) {
                     if (err) return next(err)
                     res.render('addCampaign', {
                         campaign: camp,
