@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Advertiser - adsXenium</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.4/xlsx.core.min.js" async></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark shadow">
+        <a class="navbar-brand" href="/">adsXenium</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link btn btn-dark active" href="/advertiser/1">Advertiser</a>
+                <a class="nav-item nav-link btn btn-dark" href="/campaign">Campaign</a>
+                <a class="nav-item nav-link btn btn-outline-danger" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col py-2">
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="xl" aria-describedby="inputGroupFileAddon01"
+                            name="excelFile" accept=".xls, .xlsx">
+                        <label class="custom-file-label" for="xl">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text" name="xlBtn" id="xlBtn">Upload</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row py-2 table-responsive-lg">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Advertiser</th>
+                        <th scope="col">Campaign</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Payout</th>
+                        <th scope="col">Landing Point</th>
+                        <th scope="col">GEO</th>
+                        <th scope="col">Vertical</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i = 0; i < campaign.length; i++) { %>
+                    <tr>
+                        <td><%= campaign[i].advertiserName %></td>
+                        <td><%= campaign[i].campaignName %></td>
+                        <td><%= campaign[i].descriptionMode %></td>
+                        <td><%= campaign[i].campaignPay %></td>
+                        <td><a href="<%= campaign[i].landingPoint %>"><%= campaign[i].landingPoint %></a></td>
+                        <td><%= campaign[i].geo %></td>
+                        <td><%= campaign[i].vertical %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class=" row py-2">
+            <% if (pages > 0) { %>
+            <ul class="pagination mx-auto">
+                <% if (current == 1) { %>
+                <li class="disabled page-item"><a class="page-link">First</a></li>
+                <% } else { %>
+                <li class="page-item"><a class="page-link" href="/addCampaign/<%= adId %>/1">First</a></li>
+                <% } %>
+                <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                <% if (i !== 1) { %>
+                <li class="disabled page-item"><a class="page-link">...</a></li>
+                <% } %>
+                <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                <li class="active page-item"><a class="page-link"><%= i %></a></li>
+                <% } else { %>
+                <li><a class="page-link" href="/addCampaign/<%= adId %>/<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                <li class="disabled page-item"><a class="page-link">...</a></li>
+                <% } %>
+                <% } %>
+                <% if (current == pages) { %>
+                <li class="disabled page-item"><a class="page-link">Last</a></li>
+                <% } else { %>
+                <li class="page-item"><a class="page-link" href="/addCampaign/<%= adId %>/<%= pages %>">Last</a
+                        class="page-link">
+                </li>
+                <% } %>
+            </ul>
+            <% } %>
+        </div>
+    </div>
+</body>
+<!-- Optional JavaScript -->
+<script>
+    window.onload = function () {
+        let selectFile;
+        document.getElementById('xl')
+            .addEventListener('change', function (event) {
+                selectFile = event.target.files[0];
+            });
+        document.getElementById('xlBtn')
+            .addEventListener('click', function (data) {
+                if (selectFile) {
+                    document.getElementById("xl").value = "";
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        let data = e.target.result;
+                        let workbook = XLSX.read(data, { type: "binary" });
+                        workbook.SheetNames.forEach(sheet => {
+                            let rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+                            console.log(rows);
+                            var request = new XMLHttpRequest();
+                            let token = "<%= adId %>";
+                            var url = "/addCampaign/" + token;
+                            request.open("POST", url, true);
+                            request.setRequestHeader("Content-Type", "application/json");
+                            request.onreadystatechange = function () {
+                                if (request.readyState === 4 && request.status === 200) {
+                                    console.log(request);
+                                    //console.log(json.email + ", " + json.password);
+                                }
+                            };
+                            var requestData = {
+                                token: token,
+                                row: rows
+                            }
+                            request.send(JSON.stringify(requestData));
+                            location.reload();
+                        });
+                    }
+                    reader.readAsBinaryString(selectFile);
+                }
+                else
+                    console.log("error");
+            });
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+</html>
