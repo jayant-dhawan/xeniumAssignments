@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>TODO App</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark shadow">
+        <a class="navbar-brand mx-auto" href="/">
+            TODO APP
+        </a>
+    </nav>
+    <div class="container-fluid" id="todo">
+        <div class="row">
+            <div class="col-lg-4 col-sm-12 py-2">
+                <input type="text" class="form-control" id="task" placeholder="Enter your task"
+                    aria-label="Enter your task" aria-describedby="addTask">
+                <div class="py-1">
+
+                    <button class="btn btn-outline-secondary float-right" v-on:click="addTask" type="button"
+                        id="addTask">Add Task</button>
+                </div>
+            </div>
+            <div class="col-lg-8 col-sm-12 py-2 table-responsive">
+                <table class="table table-stripped">
+                    <thead>
+                        <th scope="col">Task</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </thead>
+                    <div>
+                        <tbody>
+                            <tr is='todo-item' v-for="(item,index) in taskList" :task="item" :key="item.id"></tr>
+                        </tbody>
+                    </div>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Vue.js -->
+    <script>
+        Vue.component('todo-item', {
+            props: ['task'],
+            template: `<tr><td :id="task.id">{{task.text}}</td>
+                <td class="m-0"><button class="btn btn-outline-secondary" v-on:click="doneTask" type="button"
+                        id="addTask">Done</button></td>
+                        <td class="m-0"><button class="btn btn-outline-secondary" v-on:click="deleteTask" type="button"
+                        id="addTask">Delete</button></td></tr>`,
+            methods: {
+                doneTask() {
+                    console.log("Task Done");
+                    let task = document.getElementById();
+                    task.style.textDecoration = "line-through";
+
+                },
+                deleteTask() {
+                    console.log("Deleted Task");
+                    todo.taskList.splice(this.task.id, 1);
+                    const parsed = JSON.stringify(todo.taskList);
+                    localStorage.setItem('task', parsed);
+                }
+            }
+        })
+
+        var todo = new Vue({
+            el: '#todo',
+            data: {
+                taskList: []
+            },
+            mounted() {
+                if (localStorage.getItem('task')) {
+                    try {
+                        this.taskList = JSON.parse(localStorage.getItem('task'));
+                    }
+                    catch (e) {
+                        localStorage.removeItem('task');
+                    }
+                }
+            },
+            methods: {
+                addTask() {
+                    let newTask = document.getElementById('task').value;
+                    let newId = todo.taskList.length;
+                    if (newTask) {
+                        todo.taskList.push({ id: newId, text: newTask });
+                        this.saveTask();
+                        console.log("New Task Added");
+                    }
+                },
+                saveTask() {
+                    const parsed = JSON.stringify(this.taskList);
+                    localStorage.setItem('task', parsed);
+                }
+            }
+        })
+    </script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
